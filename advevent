@@ -94,27 +94,45 @@ e  p+!pir=1 t+трезуб = a.!pir t.трез=137  t.сундук=137 t.!соо
 
 * === проверка: все сокровища уже собраны в доме ===
 
-i  l+3  h+золото        = a.!end
-i  l+3  h+алмазы        = a.!end
-i  l+3  h+серебро       = a.!end
-i  l+3  h+драгоценности = a.!end
-i  l+3  h+монеты        = a.!end
-i  l+3  h+сундук        = a.!end
-i  l+3  h+яйца          = a.!end
-i  l+3  h+трезубец      = a.!end
-i  l+3  h+ваза          = a.!end
-i  l+3  h+изумруд       = a.!end
-i  l+3  h+платина       = a.!end
-i  l+3  h+жемчуг        = a.!end
-i  l+3  h+ковер         = a.!end
-i  l+3  h+пряности      = a.!end
-i  l+3  h+цепь          = a.!end
-i  l+3  h+RSX           = a.!end
-i  l+3  h+бусы          = a.!end  
+i  l+3  h+золото        = a.!brought
+i  l+3  h+алмазы        = a.!brought
+i  l+3  h+серебро       = a.!brought
+i  l+3  h+драгоценности = a.!brought
+i  l+3  h+монеты        = a.!brought
+i  l+3  h+сундук        = a.!brought
+i  l+3  h+яйца          = a.!brought
+i  l+3  h+трезубец      = a.!brought
+i  l+3  h+ваза          = a.!brought
+i  l+3  h+изумруд       = a.!brought
+i  l+3  h+платина       = a.!brought
+i  l+3  h+жемчуг        = a.!brought
+i  l+3  h+ковер         = a.!brought
+i  l+3  h+пряности      = a.!brought
+i  l+3  h+цепь          = a.!brought
+i  l+3  h+RSX           = a.!brought
+i  l+3  h+бусы          = a.!brought  
 
-e  p+!end=17  a-!light  %+20    = t.жезл=115  m.132  l.115
+i  t+золото        = a.!seen
+i  t+алмазы        = a.!seen
+i  t+серебро       = a.!seen
+i  t+драгоценности = a.!seen
+i  t+монеты        = a.!seen
+i  t+сундук        = a.!seen
+i  t+яйца          = a.!seen
+i  t+трезубец      = a.!seen
+i  t+ваза          = a.!seen
+i  t+изумруд       = a.!seen
+i  t+платина       = a.!seen
+i  t+жемчуг        = a.!seen
+i  t+ковер         = a.!seen
+i  t+пряности      = a.!seen
+i  t+цепь          = a.!seen
+i  t+RSX           = a.!seen
+i  t+бусы          = a.!seen  
 
-e  p+!end=16  a-!light  %+30    = p.решетка=0   p.!end=17  "
+e  p+!brought=17  a-!light  %+20    = t.жезл=115  m.132  l.115
+
+e  p+!brought=16  a-!light  %+30    = p.решетка=0   p.!brought=17  "
    Загробный голос, многократно отраженный стенами пещеры, сказал:
    "Пещера скоро закрывается, все путешественники должны немедленно
    выйти через главную контору"
