@@ -3,29 +3,29 @@
     'a', /* we are at object */
     'h', /* here is object */
     't', /* is toting object */
-    '%', /* with probability=obj% */
-    'p', /* PROP(obj)=n */
+   *'%', /* with probability=obj% */
+   *'p', /* PROP(obj)=n */
     'f', /* object is fixed */
-    '+', /* .true. */
-    'y', /* reply is "yes" */
-    'l', /* location = obj */
-    '>', /* carry > obj objects */
-    '$', /* initial probability = obj% */
-    'w'  /* one of next words - последний маркер !! */
+  **'+', /* .true. */
+   *'y', /* reply is "yes" */
+   *'l', /* location = obj */
+   *'>', /* carry > obj objects */
+   *'$', /* initial probability = obj% */
+ ***'w'  /* one of next words - последний маркер !! */
 /* === маркеры действий === */
     'd', /* drop object */
     '*', /* destroy object */
     'c', /* carry object */
-    'm', /* messane #n (  1 <= n < 256) */
+   *'m', /* messane #n (  1 <= n < 256) */
     'm', /*    ...     (256 <= n < 512) */
-    'p', /* let PROP(obj)=n */
-    'l', /* change location to #n */
-    '#', /* special case #n */
-    't', /* throw object to location #n */
+   *'p', /* let PROP(obj)=n */
+   *'l', /* change location to #n */
+   *'#', /* special case #n */
+   *'t', /* throw object to location #n */
     'a', /* add 1 to PROP(obj) */
-    'i', /* indicate objects at location */
+  **'i', /* indicate objects at location */
     'n', /* смена объекта и повторный анализ */
-    '"', /* message with address - послендний маркер !! */
+ ***'"', /* message with address - послендний маркер !! */
 
 L1:
     exit(0); /* конец игры */
