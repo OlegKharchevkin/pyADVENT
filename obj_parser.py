@@ -9,7 +9,7 @@ def obj_parser(file: str, synonyms: dict[list]):
             elif i[0] == "+":
                 buf = [j[:4] for j in i[3:-1].split()]
                 for j in buf:
-                    synonyms[j] = buf
+                    synonyms[j] = buf[0]
                 objects[buf[0]] = ["", treasure, False, [998], 0]
             elif i[0] == "i":
                 if i[3] != ">":
