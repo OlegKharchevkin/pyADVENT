@@ -23,7 +23,7 @@ def obj_parser(file: str, synonyms: dict[list]):
                 objects[buf[0]][4] = int(i[3:-1])
             elif i[0] == "=":
                 treasure = True
-            elif i[:3].isnumeric():
+            elif i[:3].replace(' ', '').isnumeric():
                 if i[3] != ">":
                     objects[buf[0]].append(i[3:-1])
                 else:
