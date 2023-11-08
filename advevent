@@ -112,23 +112,23 @@ i  l+3  h+цепь          = a.!brought
 i  l+3  h+RSX           = a.!brought
 i  l+3  h+бусы          = a.!brought  
 
-i  t+золото        = a.!seen
-i  t+алмазы        = a.!seen
-i  t+серебро       = a.!seen
-i  t+драгоценности = a.!seen
-i  t+монеты        = a.!seen
-i  t+сундук        = a.!seen
-i  t+яйца          = a.!seen
-i  t+трезубец      = a.!seen
-i  t+ваза          = a.!seen
-i  t+изумруд       = a.!seen
-i  t+платина       = a.!seen
-i  t+жемчуг        = a.!seen
-i  t+ковер         = a.!seen
-i  t+пряности      = a.!seen
-i  t+цепь          = a.!seen
-i  t+RSX           = a.!seen
-i  t+бусы          = a.!seen  
+i  h+золото        = a.!seen
+i  h+алмазы        = a.!seen
+i  h+серебро       = a.!seen
+i  h+драгоценности = a.!seen
+i  h+монеты        = a.!seen
+i  h+сундук        = a.!seen
+i  h+яйца          = a.!seen
+i  h+трезубец      = a.!seen
+i  h+ваза          = a.!seen
+i  h+изумруд       = a.!seen
+i  h+платина       = a.!seen
+i  h+жемчуг        = a.!seen
+i  h+ковер         = a.!seen
+i  h+пряности      = a.!seen
+i  h+цепь          = a.!seen
+i  h+RSX           = a.!seen
+i  h+бусы          = a.!seen  
 
 e  p+!brought=17  a-!light  %+20    = t.жезл=115  m.132  l.115
 
