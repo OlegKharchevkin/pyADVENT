@@ -9,7 +9,7 @@ def vcb_parser(file: str):
             elif i[0] == "d":
                 buf = [j[:4] for j in i[3:-1].split()]
                 for j in buf:
-                    synonyms[j] = buf
+                    synonyms[j] = buf[0]
             elif i[0] == "s":
                 words = [j[:4] for j in i[3:-1].split()]
             elif i[0] == "m":
