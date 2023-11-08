@@ -13,7 +13,7 @@ def evn_parser(file: str, synonyms: dict):
             if mode == 1:
                 if i[0].isspace():
                     if len(i) < 4 or i[3].isspace():
-                        init_events[-1][1][-1] = buf
+                        init_events[-1][1][-1].append(buf)
                         mode = 0
                         continue
                     buf.append(i[3:-1])
