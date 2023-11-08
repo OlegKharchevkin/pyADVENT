@@ -114,4 +114,4 @@ def cmd_parser(in_str: str):
 
 
 if __name__ == "__main__":
-    print(parser('r  o+**** a+rtrt h- t-wert %+30 p+eggs=0 f-sddf ++ y+15 l-13 >+7 $-69 w+( ghtd kjlkj jkjhuihiuhj jk ) = d. *.uhh c. m.23 p.kuujnui=5 l.76 #.3 t.hhjuiu=3 a.hjj i. n.yghuhi "'))
+    print(cmd_parser('r  o+**** a+rtrt h- t-wert %+30 p+eggs=0 f-sddf ++ y+15 l-13 >+7 $-69 w+( ghtd kjlkj jkjhuihiuhj jk ) = d. *.uhh c. m.23 p.kuujnui=5 l.76 #.3 t.hhjuiu=3 a.hjj i. n.yghuhi "'))
