@@ -27,7 +27,7 @@ def lct_parser(file: str, synonyms: dict):
                 if i[0].isspace() or i[0] == "*":
                     continue
                 elif i[0] == "+":
-                    number = int(i[:4])
+                    number = int(i[3:-1])
                     locations[number] = ["", [], []]
                 elif i[0] == "s":
                     locations[number][0] = i[3:-1]
@@ -41,3 +41,4 @@ def lct_parser(file: str, synonyms: dict):
                     if buf[1][-1][0] == '"':
                         buf = []
                         mode = 1
+    return locations
