@@ -6,7 +6,7 @@ def cmd_parser(in_str: str):
     for i in in_str[3:] + " ":
         match mode:
             case 0:
-                if i.isspace():
+                if i.isspace() or i == "\n":
                     continue
                 if i == "=":
                     mode = -1
@@ -75,7 +75,7 @@ def cmd_parser(in_str: str):
                     buf.append(i)
                     mode = 4
             case -1:
-                if i.isspace():
+                if i.isspace() or i == "\n":
                     continue
                 count += 1
                 buf = []
@@ -105,11 +105,12 @@ def cmd_parser(in_str: str):
             case -4:
                 if i == ".":
                     continue
-                elif i == " ":
+                elif i == " " or i == "\n":
                     data[1][count].append("".join(buf)[:4])
                     mode = -1
                 else:
                     buf.append(i)
+
     return data
 
 
