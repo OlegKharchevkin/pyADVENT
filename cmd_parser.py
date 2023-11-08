@@ -1,4 +1,4 @@
-def parser(in_str: str):
+def cmd_parser(in_str: str):
     data = [[], []]
     mode = 0
     count = -1
