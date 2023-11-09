@@ -54,8 +54,8 @@ def cnd_processing(obj: str, conditions: list, additional_objects: list, message
     return True
 
 
-def act_processing(obj: str, conditions: list, additional_objects: list, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print, _input):
-    output = [3, '']
+def act_processing(obj: str, additional_objects: list, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print):
+    output = [0, '']
     for i in actions:
         if i[0] == 'd':
             if i[1] == '':
@@ -102,10 +102,10 @@ def act_processing(obj: str, conditions: list, additional_objects: list, actions
                 player.objects_states[i[1]] = i[2]
         elif i[0] == 'l':
             player.location = i[1]
-            if player.short_ans and locations[i[1]][0] != '':
+            if player.short_ans and locations[i[1]][0] != '' and player.already_been[i[1]]:
                 _print(locations[i[1]][0])
             else:
-                _print(*locations[i[1]][0], sep='\n')
+                _print(*locations[i[1]][1], sep='\n')
         elif i[0] == '#':
             if i[1] == 1:
                 output[0] = 1
