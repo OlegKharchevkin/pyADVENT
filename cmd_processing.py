@@ -35,7 +35,7 @@ def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, pl
         elif i[0] == '+':
             buf = True
         elif i[0] == 'y':
-            _print(*messages(i[2]), sep='\n')
+            _print(*messages[i[2]], sep='\n')
             ans = _input().replace(' ', '')
             buf = ans in ('да', 'д', 'yes', 'y')
         elif i[0] == 'l':
@@ -49,4 +49,6 @@ def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, pl
             buf = obj in i[2:]
         if i[1]:
             buf = not buf
-        return buf
+        if not buf:
+            return False
+    return True
