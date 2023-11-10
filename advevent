@@ -4,7 +4,8 @@
 *    i  initialisation
 *    e  events
 
-i  y+65    = m.1 l.1
+i  $-0 y+65  = m.1
+i  ++      = l.1
 i  $+60    = t.ключи=5
 i  $+20    = t.ключи=6
 i  $+30    = t.еда=11
