@@ -2,14 +2,14 @@ def arg_rename(cmd_line: list, synonyms: dict):
     for index, i in enumerate(cmd_line[0]):
         if i[0] in ('o', 'a', 'h', 't', 'p', 'f'):
             if i[2] != '' and i[2] != '****':
-                cmd_line[0][index][2] = synonyms[i[2][:4]]
+                cmd_line[0][index][2] = synonyms[i[2][:4].lower()]
         if i[0] == 'w':
             for number, j in enumerate(i[2:]):
-                cmd_line[0][index][number + 2] = synonyms[j[:4]]
+                cmd_line[0][index][number + 2] = synonyms[j[:4].lower()]
     for index, i in enumerate(cmd_line[1]):
         if i[0] in ('d', '*', 'c', 'a', 'n', 't'):
             if i[1] != '':
-                cmd_line[1][index][1] = synonyms[i[1][:4]]
+                cmd_line[1][index][1] = synonyms[i[1][:4].lower()]
 
 
 def cmd_parser(in_str: str):
@@ -43,7 +43,7 @@ def cmd_parser(in_str: str):
                 elif i == "-":
                     data[0][count].append(True)
                 elif i == "=":
-                    data[0][count].append("".join(buf)[:4])
+                    data[0][count].append("".join(buf)[:4].lower())
                     buf = []
                 elif i == " ":
                     data[0][count].append(int("".join(buf)))
@@ -63,7 +63,7 @@ def cmd_parser(in_str: str):
                 elif i == "-":
                     data[0][count].append(True)
                 elif i == " ":
-                    data[0][count].append("".join(buf)[:4])
+                    data[0][count].append("".join(buf)[:4].lower())
                     mode = 0
                 else:
                     buf.append(i)
@@ -75,7 +75,7 @@ def cmd_parser(in_str: str):
                 elif i == "(":
                     mode = 5
                 elif i == " ":
-                    data[0][count].append("".join(buf)[:4])
+                    data[0][count].append("".join(buf)[:4].lower())
                     buf = []
                     mode = 5
                 else:
@@ -106,7 +106,7 @@ def cmd_parser(in_str: str):
                 if i == ".":
                     continue
                 elif i == "=":
-                    data[1][count].append("".join(buf)[:4])
+                    data[1][count].append("".join(buf)[:4].lower())
                     buf = []
                 elif i == " ":
                     data[1][count].append(int("".join(buf)))
@@ -120,7 +120,7 @@ def cmd_parser(in_str: str):
                 if i == ".":
                     continue
                 elif i == " " or i == "\n":
-                    data[1][count].append("".join(buf)[:4])
+                    data[1][count].append("".join(buf)[:4].lower())
                     mode = -1
                 else:
                     buf.append(i)
@@ -254,7 +254,7 @@ def obj_parser(file: str, synonyms: dict[list]):
             if i[0].isspace() or i[0] == "*":
                 continue
             elif i[0] == "+":
-                buf = [j[:4] for j in i[3:-1].split()]
+                buf = [j[:4].lower() for j in i[3:-1].split()]
                 for j in buf:
                     synonyms[j] = buf[0]
                 objects[buf[0]] = ["", treasure, False, [998], 0]
@@ -287,11 +287,11 @@ def vcb_parser(file: str):
             if i[0].isspace() or i[0] == "*":
                 continue
             elif i[0] == "d":
-                buf = [j[:4] for j in i[3:-1].split()]
+                buf = [j[:4].lower() for j in i[3:-1].split()]
                 for j in buf:
                     synonyms[j] = buf[0]
             elif i[0] == "s":
-                words = [j[:4] for j in i[3:-1].split()]
+                words = [j[:4].lower() for j in i[3:-1].split()]
             elif i[0] == "m":
                 for j in words:
                     if j in trivial_answers:
@@ -326,7 +326,7 @@ def act_parser(file: str,  synonyms: dict):
                 if i[0].isspace() or i[0] == "*":
                     continue
                 elif i[0] == "+":
-                    buf = [j[:4] for j in i[3:-1].split()]
+                    buf = [j[:4].lower() for j in i[3:-1].split()]
                     word = buf[0]
                     for j in buf:
                         synonyms[j] = word

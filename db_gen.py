@@ -1,4 +1,4 @@
-def obj_db(objects: dict):
+def obj_db(objects: dict, locations: dict):
     objects_db = {}
     for name, i in objects.items():
         for j in i[3]:
@@ -6,6 +6,9 @@ def obj_db(objects: dict):
                 objects_db[j].append(name)
             else:
                 objects_db[j] = [name]
+    for i in locations:
+        if i not in objects_db:
+            objects_db[i] = []
     return objects_db
 
 

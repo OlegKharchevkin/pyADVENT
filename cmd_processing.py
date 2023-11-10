@@ -2,7 +2,7 @@ from Player import Player
 from random import randint
 
 
-def cnd_processing(obj: str, conditions: list, additional_objects: list, messages: dict, objects: dict, player: Player, _print, _input):
+def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, player: Player, _print, _input):
     for index, i in enumerate(conditions):
         buf = True
         if i[0] == 'o':
@@ -12,9 +12,9 @@ def cnd_processing(obj: str, conditions: list, additional_objects: list, message
                 buf = obj == i[2]
         elif i[0] == 'h':
             if i[2] != '':
-                buf = i[2] in player.objects_db[player.location] or i[2] in additional_objects
+                buf = i[2] in player.objects_db[player.location] or i[2] in player.inventory
             else:
-                buf = obj in player.objects_db[player.location] or obj in additional_objects
+                buf = obj in player.objects_db[player.location] or obj in player.inventory
         elif i[0] == 't':
             if i[2] != '':
                 buf = i[2] in player.inventory
@@ -29,9 +29,9 @@ def cnd_processing(obj: str, conditions: list, additional_objects: list, message
                 buf = player.objects_states[i[2]] == i[3]
         elif i[0] == 'f':
             if i[2] == '':
-                buf = objects[obj][2]
+                buf = not objects[obj][2]
             else:
-                buf = objects[i[2]][2]
+                buf = not objects[i[2]][2]
         elif i[0] == '+':
             buf = True
         elif i[0] == 'y':
@@ -54,7 +54,7 @@ def cnd_processing(obj: str, conditions: list, additional_objects: list, message
     return True
 
 
-def act_processing(obj: str, additional_objects: list, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print):
+def act_processing(obj: str, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print):
     output = [0, '']
     for i in actions:
         if i[0] == 'd':
@@ -106,22 +106,25 @@ def act_processing(obj: str, additional_objects: list, actions: list, messages: 
                 _print(locations[i[1]][0])
             else:
                 _print(*locations[i[1]][1], sep='\n')
+            player.already_been[i[1]] = True
         elif i[0] == '#':
             if i[1] == 1:
                 output[0] = 1
             if i[1] == 2:
                 score = player.objects_states['!bro'] * \
                     15 + player.objects_states['!see'] * 5
-                for i in sorted(scores.keys(), reverse=True):
-                    if score <= i:
-                        _print(*score[i], sep='\n')
+                for j in sorted(scores.keys()):
+                    if score <= j:
+                        _print(score)
+                        _print(*scores[j], sep='\n')
                         break
             if i[1] == 3:
                 score = player.objects_states['!bro'] * \
                     15 + player.objects_states['!see'] * 5
-                for i in sorted(scores.keys(), reverse=True):
-                    if score <= i:
-                        _print(*score[i], sep='\n')
+                for j in sorted(scores.keys()):
+                    if score <= j:
+                        _print(score)
+                        _print(*scores[j], sep='\n')
                         break
                 output[0] = 1
             if i[1] == 4:
@@ -130,22 +133,22 @@ def act_processing(obj: str, additional_objects: list, actions: list, messages: 
                 if len(player.inventory) > 0:
                     _print(*messages[99], sep='\n')
                     for j in player.inventory:
-                        _print(*objects[j][0], sep='\n')
+                        if j != '!lig':
+                            _print('*' if objects[j][1]
+                                   else ' ', objects[j][0])
                 else:
                     _print(*messages[98], sep='\n')
             if i[1] == 6:
                 _print(*locations[player.location][1], sep='\n')
                 for j in player.objects_db[player.location]:
-                    if objects[j][player.objects_states[j] + 5] != '':
+                    if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
                         _print(objects[j][player.objects_states[j] + 5])
             if i[1] == 7:
-                if '!lig' not in additional_objects:
-                    additional_objects.append('!lig')
-                    player.objects_states['lamp'] = 1
+                if '!lig' not in player.inventory:
+                    player.inventory.append('!lig')
             if i[1] == 8:
-                if '!lig' in additional_objects:
-                    additional_objects.remove('!lig')
-                    player.objects_states['lamp'] = 0
+                if '!lig' in player.inventory:
+                    player.inventory.remove('!lig')
             if i[1] == 9:
                 output[0] = 2
         elif i[0] == 't':
