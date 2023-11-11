@@ -2,13 +2,13 @@ def obj_db(objects: dict, locations: dict):
     objects_db = {}
     for name, i in objects.items():
         for j in i[3]:
-            if j in objects_db:
-                objects_db[j].append(name)
+            if str(j) in objects_db:
+                objects_db[str(j)].append(name)
             else:
-                objects_db[j] = [name]
+                objects_db[str(j)] = [name]
     for i in locations:
-        if i not in objects_db:
-            objects_db[i] = []
+        if str(i) not in objects_db:
+            objects_db[str(i)] = []
     return objects_db
 
 
