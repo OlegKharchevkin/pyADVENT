@@ -4,52 +4,55 @@ from random import randint
 
 def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, player: Player, _print, _input):
     for index, i in enumerate(conditions):
-        buf = True
-        if i[0] == 'o':
-            if i[2] == '****':
-                buf = obj == ''
-            else:
-                buf = obj == i[2]
-        elif i[0] == 'h':
-            if i[2] != '':
-                buf = i[2] in player.objects_db[player.location] or i[2] in player.inventory
-            else:
-                buf = obj in player.objects_db[player.location] or obj in player.inventory
-        elif i[0] == 't':
-            if i[2] != '':
-                buf = i[2] in player.inventory
-            else:
-                buf = obj in player.inventory
-        elif i[0] == '%':
-            buf = randint(0, 99) < i[2]
-        elif i[0] == 'p':
-            if i[2] == '':
-                buf = player.objects_states[obj] == i[3]
-            else:
-                buf = player.objects_states[i[2]] == i[3]
-        elif i[0] == 'f':
-            if i[2] == '':
-                buf = not objects[obj][2]
-            else:
-                buf = not objects[i[2]][2]
-        elif i[0] == '+':
-            buf = True
-        elif i[0] == 'y':
-            _print(*messages[i[2]], sep='\n')
-            ans = _input().replace(' ', '')
-            buf = ans in ('да', 'д', 'yes', 'y')
-        elif i[0] == 'l':
-            buf = player.location == i[2]
-        elif i[0] == '>':
-            buf = len(player.inventory) > 7
-        elif i[0] == '$':
-            buf = randint(0, 99) < i[2]
-            conditions[index] = ['+', True]
-        elif i[0] == 'w':
-            buf = obj in i[2:]
+        ans = True
+        if len(i) >= 3:
+            buf = obj if i[2] == '' else i[2]
+        match i[0]:
+            case 'o':
+                ans = obj == ('' if i[2] == '****' else i[2])
+            case 'h':
+                ans = buf in player.objects_db[str(
+                    player.location)] or buf in player.inventory
+            case 'a':
+                ans = buf in player.objects_db[str(player.location)]
+            case 't':
+                ans = buf in player.inventory
+            case '%':
+                ans = randint(0, 99) < i[2]
+            case 'p':
+                ans = player.objects_states[buf] == i[3]
+            case 'f':
+                ans = not objects[buf][2]
+            case '+':
+                ans = True
+            case 'y':
+                _print(*messages[str(i[2])], sep='\n')
+                while True:
+                    _print()
+                    ans = _input().replace(' ', '').lower()
+                    _print()
+                    if ans[0] == 'д':
+                        ans = True
+                        break
+                    if ans[0] == 'н':
+                        ans = False
+                        break
+                    _print(*messages['994'], sep='\n')
+            case 'l':
+                ans = player.location == i[2]
+            case '>':
+                if '!lig' not in player.inventory:
+                    ans = len(player.inventory) > i[2]
+                else:
+                    ans = len(player.inventory) > i[2] + 1
+            case '$':
+                ans = randint(0, 99) < i[2]
+                conditions[index] = ['+', True]
+            case 'w':
+                ans = obj in i[2:]
         if i[1]:
-            buf = not buf
-        if not buf:
+            ans = not ans
+        if not ans:
             return False
     return True
 
@@ -57,129 +60,111 @@ def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, pl
 def act_processing(obj: str, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print):
     output = [0, '']
     for i in actions:
-        if i[0] == 'd':
-            if i[1] == '':
-                if obj in player.inventory:
-                    player.inventory.remove(obj)
-                if obj not in player.objects_db[player.location]:
-                    player.objects_db[player.location].append(obj)
-            else:
-                if i[1] in player.inventory:
-                    player.inventory.remove(i[1])
-                if i[1] not in player.objects_db[player.location]:
-                    player.objects_db[player.location].append(i[1])
+        buf = obj if i[1] == '' else i[1]
+        match i[0]:
+            case 'd':
+                if buf in player.inventory:
+                    player.inventory.remove(buf)
+                for j in player.objects_db:
+                    if buf in player.objects_db[j]:
+                        player.objects_db[j].remove(buf)
+                player.objects_db[str(player.location)].append(buf)
 
-        elif i[0] == '*':
-            if i[1] == '':
-                if obj in player.inventory:
-                    player.inventory.remove(obj)
+            case '*':
+                if buf in player.inventory:
+                    player.inventory.remove(buf)
                 for j in player.objects_db:
-                    if obj in player.objects_db[j]:
-                        player.objects_db[j].remove(obj)
-            else:
-                if i[1] in player.inventory:
-                    player.inventory.remove(i[1])
-                for j in player.objects_db:
-                    if i[1] in player.objects_db[j]:
-                        player.objects_db[j].remove(i[1])
-        elif i[0] == 'c':
-            if i[1] == '':
-                if obj in player.objects_db[player.location]:
-                    player.objects_db[player.location].remove(obj)
-                if obj not in player.inventory:
-                    player.inventory.append(obj)
-            else:
-                if i[1] in player.objects_db[player.location]:
-                    player.objects_db[player.location].remove(i[1])
-                if i[1] not in player.inventory:
-                    player.inventory.append(i[1])
-        elif i[0] == 'm':
-            _print(*messages[i[1]], sep='\n')
-        elif i[0] == 'p':
-            if i[1] == '':
-                player.objects_states[obj] = i[2]
-            else:
-                player.objects_states[i[1]] = i[2]
-        elif i[0] == 'l':
-            player.location = i[1]
-            if player.short_ans and locations[i[1]][0] != '' and player.already_been[i[1]]:
-                _print(locations[i[1]][0])
-            else:
-                _print(*locations[i[1]][1], sep='\n')
-            player.already_been[i[1]] = True
-        elif i[0] == '#':
-            if i[1] == 1:
-                output[0] = 1
-            if i[1] == 2:
-                score = player.objects_states['!bro'] * \
-                    15 + player.objects_states['!see'] * 5
-                for j in sorted(scores.keys()):
-                    if score <= j:
-                        _print(score)
-                        _print(*scores[j], sep='\n')
-                        break
-            if i[1] == 3:
-                score = player.objects_states['!bro'] * \
-                    15 + player.objects_states['!see'] * 5
-                for j in sorted(scores.keys()):
-                    if score <= j:
-                        _print(score)
-                        _print(*scores[j], sep='\n')
-                        break
-                output[0] = 1
-            if i[1] == 4:
-                player.short_ans = True
-            if i[1] == 5:
-                if len(player.inventory) > 0:
-                    _print(*messages[99], sep='\n')
-                    for j in player.inventory:
-                        if j != '!lig':
-                            _print('*' if objects[j][1]
-                                   else ' ', objects[j][0])
+                    if buf in player.objects_db[j]:
+                        player.objects_db[j].remove(buf)
+                player.objects_db['999'].append(buf)
+            case 'c':
+                if buf in player.objects_db[str(player.location)]:
+                    player.objects_db[str(player.location)].remove(buf)
+                if buf not in player.inventory:
+                    player.inventory.append(buf)
+            case 'm':
+                _print(*messages[str(buf)], sep='\n')
+            case 'p':
+                player.objects_states[buf] = i[2]
+            case 'l':
+                player.location = i[1]
+                if player.short_ans and locations[str(i[1])][0] != '' and player.already_been[str(i[1])]:
+                    _print(locations[str(i[1])][0])
                 else:
-                    _print(*messages[98], sep='\n')
-            if i[1] == 6:
-                _print(*locations[player.location][1], sep='\n')
-                for j in player.objects_db[player.location]:
-                    if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
-                        _print(objects[j][player.objects_states[j] + 5])
-            if i[1] == 7:
-                if '!lig' not in player.inventory:
-                    player.inventory.append('!lig')
-            if i[1] == 8:
-                if '!lig' in player.inventory:
-                    player.inventory.remove('!lig')
-            if i[1] == 9:
-                output[0] = 2
-        elif i[0] == 't':
-            if i[1] == '':
-                if obj in player.inventory:
-                    player.inventory.remove(obj)
+                    _print(*locations[str(i[1])][1], sep='\n')
+                player.already_been[str(i[1])] = True
+            case '#':
+                match i[1]:
+                    case 1:
+                        output[0] = 1
+                    case 2:
+                        score = player.objects_states['!bro'] * \
+                            15 + player.objects_states['!see'] * 5
+                        for j in sorted(scores.keys()):
+                            if score <= int(j):
+                                _print(f"Счет: {score}")
+                                _print(*scores[j], sep='\n')
+                                break
+                    case 3:
+                        score = player.objects_states['!bro'] * \
+                            15 + player.objects_states['!see'] * 5
+                        for j in sorted(scores.keys()):
+                            if score <= int(j):
+                                _print(f"Счет: {score}")
+                                _print(*scores[j], sep='\n')
+                                break
+                        output[0] = 1
+                    case 4:
+                        player.short_ans = True
+                    case 5:
+                        if len(player.inventory) > 0:
+                            _print(*messages['999'], sep='\n')
+                            for j in player.inventory:
+                                if j != '!lig':
+                                    _print('*' if objects[j][1]
+                                           else ' ', objects[j][0])
+                        else:
+                            _print(*messages['998'], sep='\n')
+                    case 6:
+                        if player.already_been[str(player.location)]:
+                            _print(*messages['995'], sep='\n')
+                            _print()
+                        _print(*locations[str(player.location)][1], sep='\n')
+
+                        if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
+                            flag = True
+                            for j in player.objects_db[str(player.location)]:
+                                if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
+                                    if flag:
+                                        _print()
+                                        flag = False
+                                    _print(
+                                        *objects[j][player.objects_states[j] + 5], sep='\n')
+                    case 7:
+                        if '!lig' not in player.inventory:
+                            player.inventory.append('!lig')
+                    case 8:
+                        if '!lig' in player.inventory:
+                            player.inventory.remove('!lig')
+                    case 9:
+                        output[0] = 2
+            case 't':
+                if buf in player.inventory:
+                    player.inventory.remove(buf)
                 for j in player.objects_db:
-                    if obj in player.objects_db[j]:
-                        player.objects_db[j].remove(obj)
-                if obj not in player.objects_db[i[2]]:
-                    player.objects_db[i[2]].append(obj)
-            else:
-                if i[1] in player.inventory:
-                    player.inventory.remove(i[1])
-                for j in player.objects_db:
-                    if i[1] in player.objects_db[j]:
-                        player.objects_db[j].remove(i[1])
-                if i[1] not in player.objects_db[i[2]]:
-                    player.objects_db[i[2]].append(i[1])
-        elif i[0] == 'a':
-            if i[1] == '':
-                player.objects_states[obj] += 1
-            else:
-                player.objects_states[i[1]] += 1
-        elif i[0] == 'i':
-            for j in player.objects_db[player.location]:
-                if objects[j][player.objects_states[j] + 5] != '':
-                    _print(objects[j][player.objects_states[j] + 5])
-        elif i[0] == 'n':
-            output[0] = 3
-            output[1] = i[1]
-        elif i[0] == '"':
-            _print(*i[1], sep='\n')
+                    if str(buf) in player.objects_db[j]:
+                        player.objects_db[j].remove(buf)
+                player.objects_db[str(i[2])].append(buf)
+            case 'a':
+                player.objects_states[str(buf)] += 1
+            case 'i':
+                if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
+                    for j in player.objects_db[str(player.location)]:
+                        if objects[j][player.objects_states[j] + 5] != '':
+                            _print(objects[j][player.objects_states[j] + 5])
+            case 'n':
+                output[0] = 3
+                output[1] = i[1]
+            case '"':
+                _print(*i[1], sep='\n')
     return output

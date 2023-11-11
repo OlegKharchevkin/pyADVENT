@@ -1,13 +1,13 @@
 def arg_rename(cmd_line: list, synonyms: dict):
     for index, i in enumerate(cmd_line[0]):
-        if i[0] in ('o', 'a', 'h', 't', 'p', 'f'):
+        if i[0] in ('o', 'h', 'a', 't', 'p', 'f'):
             if i[2] != '' and i[2] != '****':
                 cmd_line[0][index][2] = synonyms[i[2][:4].lower()]
         if i[0] == 'w':
             for number, j in enumerate(i[2:]):
                 cmd_line[0][index][number + 2] = synonyms[j[:4].lower()]
     for index, i in enumerate(cmd_line[1]):
-        if i[0] in ('d', '*', 'c', 'a', 'n', 't'):
+        if i[0] in ('d', '*', 'c', 'a', 'n', 't', 'p'):
             if i[1] != '':
                 cmd_line[1][index][1] = synonyms[i[1][:4].lower()]
 
@@ -129,28 +129,12 @@ def cmd_parser(in_str: str):
 
 
 def evn_parser(file: str, synonyms: dict):
-    init_events = []
     casual_events = []
-
     with open(file, "r", encoding='utf-8') as f:
         buf = []
         mode = 0
         for i in f.readlines():
             if mode == 1:
-                if i[0].isspace():
-                    if len(i) < 4 or i[3].isspace():
-                        init_events[-1][1][-1].append(buf)
-                        mode = 0
-                        continue
-                    buf.append(i[3:-1])
-                elif i[0] == "*":
-                    init_events[-1][1][-1].append(buf)
-                    mode = 0
-                    continue
-                else:
-                    init_events[-1][1][-1].append(buf)
-                    mode = 0
-            elif mode == 2:
                 if i[0].isspace():
                     if len(i) < 4 or i[3].isspace():
                         casual_events[-1][1][-1].append(buf)
@@ -165,28 +149,16 @@ def evn_parser(file: str, synonyms: dict):
                     casual_events[-1][1][-1].append(buf)
                     mode = 0
             if mode == 0:
-                if i[0].isspace() or i[0] == "*":
-                    continue
-                elif i[0] == "i":
-                    buf = cmd_parser(i)
-                    arg_rename(buf, synonyms)
-                    init_events.append(buf)
-                    if buf[1][-1][0] == '"':
-                        buf = []
-                        mode = 1
-                elif i[0] == "e":
+                if i[0] == "e":
                     buf = cmd_parser(i)
                     arg_rename(buf, synonyms)
                     casual_events.append(buf)
                     if buf[1][-1][0] == '"':
                         buf = []
-                        mode = 2
+                        mode = 1
         if len(buf) > 0:
-            if mode == 1:
-                init_events[-1][1][-1].append(buf)
-            if mode == 2:
-                casual_events[-1][1][-1].append(buf)
-    return init_events, casual_events
+            casual_events[-1][1][-1].append(buf)
+    return casual_events
 
 
 def lct_parser(file: str, synonyms: dict):
@@ -199,32 +171,32 @@ def lct_parser(file: str, synonyms: dict):
             if mode == 1:
                 if i[0].isspace():
                     if len(i) < 4 or i[3].isspace():
-                        locations[number][2][-1][1][-1].append(buf)
+                        locations[str(number)][2][-1][1][-1].append(buf)
                         mode = 0
                         continue
                     buf.append(i[3:-1])
                 elif i[0] == "*":
-                    locations[number][2][-1][1][-1].append(buf)
+                    locations[str(number)][2][-1][1][-1].append(buf)
                     mode = 0
                     continue
                 else:
-                    locations[number][2][-1][1][-1].append(buf)
+                    locations[str(number)][2][-1][1][-1].append(buf)
                     mode = 0
             if mode == 0:
                 if i[0].isspace() or i[0] == "*":
                     continue
                 elif i[0] == "+":
                     number = int(i[3:-1])
-                    locations[number] = ["", [], []]
+                    locations[str(number)] = ["", [], []]
                 elif i[0] == "s":
-                    locations[number][0] = i[3:-1]
+                    locations[str(number)][0] = i[3:-1]
                 elif i[0] == "l":
                     if i[3] != ">":
-                        locations[number][1].append(i[3:-1])
+                        locations[str(number)][1].append(i[3:-1])
                 elif i[0] == "t":
                     buf = cmd_parser(i)
                     arg_rename(buf, synonyms)
-                    locations[number][2].append(buf)
+                    locations[str(number)][2].append(buf)
                     if buf[1][-1][0] == '"':
                         buf = []
                         mode = 1
@@ -238,10 +210,10 @@ def msg_parser(file: str):
             if i[0].isspace() or i[0] == "*":
                 continue
             number = int(i[:3])
-            if number in messages:
-                messages[number].append(i[3:-1])
+            if str(number) in messages:
+                messages[str(number)].append(i[3:-1])
             else:
-                messages[number] = [i[3:-1]]
+                messages[str(number)] = [i[3:-1]]
     return messages
 
 
@@ -257,7 +229,7 @@ def obj_parser(file: str, synonyms: dict[list]):
                 buf = [j[:4].lower() for j in i[3:-1].split()]
                 for j in buf:
                     synonyms[j] = buf[0]
-                objects[buf[0]] = ["", treasure, False, [998], 0]
+                objects[buf[0]] = ["", treasure, False, [999], 0]
             elif i[0] == "i":
                 if i[3] != ">":
                     objects[buf[0]][0] = i[3:-1]
@@ -272,7 +244,10 @@ def obj_parser(file: str, synonyms: dict[list]):
                 treasure = True
             elif i[:3].replace(' ', '').isnumeric():
                 if i[3] != ">":
-                    objects[buf[0]].append(i[3:-1])
+                    if len(objects[buf[0]]) <= 5 + int(i[:3]):
+                        objects[buf[0]].append([i[3:-1]])
+                    else:
+                        objects[buf[0]][int(i[:3]) + 5].append(i[3:-1])
                 else:
                     objects[buf[0]].append("")
     return objects
@@ -282,22 +257,22 @@ def vcb_parser(file: str):
     synonyms = {}
     trivial_answers = {}
     with open(file, "r", encoding='utf-8') as f:
-        words = []
+        buf = []
         for i in f.readlines():
-            if i[0].isspace() or i[0] == "*":
-                continue
-            elif i[0] == "d":
-                buf = [j[:4].lower() for j in i[3:-1].split()]
-                for j in buf:
-                    synonyms[j] = buf[0]
-            elif i[0] == "s":
-                words = [j[:4].lower() for j in i[3:-1].split()]
-            elif i[0] == "m":
-                for j in words:
-                    if j in trivial_answers:
-                        trivial_answers[j].append(i[3:-1])
+            match i[0]:
+                case "d":
+                    buf = [j[:4].lower() for j in i[3:-1].split()]
+                    for j in buf:
+                        synonyms[j] = buf[0]
+                case "s":
+                    buf = [j[:4].lower() for j in i[3:-1].split()]
+                    for j in buf:
+                        synonyms[j] = buf[0]
+                case "m":
+                    if buf[0] in trivial_answers:
+                        trivial_answers[buf[0]].append(i[3:-1])
                     else:
-                        trivial_answers[j] = [i[3:-1]]
+                        trivial_answers[buf[0]] = [i[3:-1]]
     return synonyms, trivial_answers
 
 
