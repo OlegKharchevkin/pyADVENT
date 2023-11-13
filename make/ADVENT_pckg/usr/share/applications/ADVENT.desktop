@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ADVENT
+Encoding=UTF-8
+Comment=Игра Collosal Cave Adventure на русском языке.
+Exec=../../bin/ADVENT
+Icon=/usr/share/pixmaps/cave.png
+Terminal=true
+Type=Application
+Categories=Game;
+StartupNotify=true
