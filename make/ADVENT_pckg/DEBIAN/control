@@ -1,0 +1,7 @@
+Package: pyADVENT
+Version: 1.3
+Section: game
+Priority: optional
+Architecture: amd64
+Maintainer: AGA <olegharchevkin@yandex.ru>
+Description: Игра Collosal Cave Adventure на русском языке.
