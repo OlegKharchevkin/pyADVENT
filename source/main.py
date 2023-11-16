@@ -30,13 +30,19 @@ def resource_path(relative):
 
 def main():
     files = []
+    try:
+        with open(Path(".\\test.test").resolve(), "w"):
+            pass
+        os.remove(Path(".\\test.test").resolve())
+    except PermissionError:
+        os.chdir(os.path.expanduser('~'))
     if len(sys.argv[1:]) > 0:
         for i in sys.argv[1:]:
             path = Path(i)
             if path.is_file() and path.suffix == '.adv':
                 files.append(path)
     else:
-        for i in Path('.').rglob('*.adv'):
+        for i in Path('.').glob('*.adv'):
             files.append(i)
     print('Выберете действие:')
     print()
@@ -45,15 +51,18 @@ def main():
         print(f'{i[0] + 1} Загрузить {i[1]}')
     print()
     i = ''
-    while True:
-        i = input()
-        if i.replace(' ', '').isnumeric():
-            if int(i) <= len(files):
-                break
+    try:
+        while True:
+            i = input()
+            if i.replace(' ', '').isnumeric():
+                if int(i) <= len(files):
+                    break
+    except EOFError:
+        return 2
     i = int(i)
     print()
     if i == 0:
-        engine = Engine(resource_path('new.adv'))
+        engine = Engine(resource_path('.\\new.adv'))
     else:
         engine = Engine(files[i - 1])
 
@@ -61,18 +70,25 @@ def main():
         output = engine.events_processing(print, input)
         if output == 1:
             break
-        while (input_str := input()).replace(' ', '') == '':
-            continue
+        try:
+            while (input_str := input()).replace(' ', '') == '':
+                continue
+        except EOFError:
+            return 2
         output = engine.input(input_str, print, input)
         if output == 1:
             break
         if output == 2:
-            engine.save(f'{input("Введите имя: ")}.adv')
+            try:
+                engine.save(f'{input("Введите имя: ")}.adv')
+            except EOFError:
+                return 2
             print()
             print("Готово!")
             print()
     input()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
