@@ -31,9 +31,9 @@ def resource_path(relative):
 def main():
     files = []
     try:
-        with open(Path(".\\test.test").resolve(), "w"):
+        with open(Path("./test.test").resolve(), "w"):
             pass
-        os.remove(Path(".\\test.test").resolve())
+        os.remove(Path("./test.test").resolve())
     except PermissionError:
         os.chdir(os.path.expanduser('~'))
     if len(sys.argv[1:]) > 0:
@@ -62,7 +62,7 @@ def main():
     i = int(i)
     print()
     if i == 0:
-        engine = Engine(resource_path('.\\new.adv'))
+        engine = Engine(resource_path('./new.adv'))
     else:
         engine = Engine(files[i - 1])
 
