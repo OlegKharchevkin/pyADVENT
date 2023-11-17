@@ -220,6 +220,8 @@ def lct_parser(file: str, synonyms: dict):
                     if buf[1][-1][0] == '"':
                         buf = []
                         mode = 1
+        if mode == 1:
+            locations[str(number)][2][-1][1][-1].append(buf)
     return locations
 
 
