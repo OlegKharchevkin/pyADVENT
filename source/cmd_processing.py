@@ -78,7 +78,8 @@ def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, pl
 def act_processing(obj: str, actions: list, messages: dict, scores: dict, locations: dict, objects: dict, player: Player, _print):
     output = [0, '']
     for i in actions:
-        buf = obj if i[1] == '' else i[1]
+        if i[0] != "i":
+            buf = obj if i[1] == '' else i[1]
         match i[0]:
             case 'd':
                 if buf in player.inventory:
@@ -110,6 +111,15 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                     _print(locations[str(i[1])][0])
                 else:
                     _print(*locations[str(i[1])][1], sep='\n')
+                    if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
+                        flag = True
+                    for j in player.objects_db[str(player.location)]:
+                        if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
+                            if flag:
+                                _print()
+                                flag = False
+                            _print(
+                                *objects[j][player.objects_states[j] + 5], sep='\n')
                 player.already_been[str(i[1])] = True
             case '#':
                 match i[1]:
@@ -118,18 +128,18 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                     case 2:
                         score = player.objects_states['!bro'] * \
                             15 + player.objects_states['!see'] * 5
-                        for j in sorted(scores.keys()):
-                            if score <= int(j):
+                        for j in sorted(map(int, (scores.keys())), reverse=True):
+                            if score >= j:
                                 _print(f"Счет: {score}")
-                                _print(*scores[j], sep='\n')
+                                _print(*scores[str(j)], sep='\n')
                                 break
                     case 3:
                         score = player.objects_states['!bro'] * \
                             15 + player.objects_states['!see'] * 5
-                        for j in sorted(scores.keys()):
-                            if score <= int(j):
+                        for j in sorted(map(int, (scores.keys())), reverse=True):
+                            if score >= j:
                                 _print(f"Счет: {score}")
-                                _print(*scores[j], sep='\n')
+                                _print(*scores[str(j)], sep='\n')
                                 break
                         output[0] = 1
                     case 4:
@@ -177,9 +187,14 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                 player.objects_states[str(buf)] += 1
             case 'i':
                 if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
+                    flag = True
                     for j in player.objects_db[str(player.location)]:
-                        if objects[j][player.objects_states[j] + 5] != '':
-                            _print(objects[j][player.objects_states[j] + 5])
+                        if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
+                            if flag:
+                                _print()
+                                flag = False
+                            _print(
+                                *objects[j][player.objects_states[j] + 5], sep='\n')
             case 'n':
                 output[0] = 3
                 output[1] = i[1]
