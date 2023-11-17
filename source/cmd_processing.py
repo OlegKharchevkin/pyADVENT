@@ -113,13 +113,13 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                     _print(*locations[str(i[1])][1], sep='\n')
                     if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
                         flag = True
-                    for j in player.objects_db[str(player.location)]:
-                        if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
-                            if flag:
-                                _print()
-                                flag = False
-                            _print(
-                                *objects[j][player.objects_states[j] + 5], sep='\n')
+                        for j in player.objects_db[str(player.location)]:
+                            if len(objects[j]) > player.objects_states[j] + 5 and objects[j][player.objects_states[j] + 5] != '':
+                                if flag:
+                                    _print()
+                                    flag = False
+                                _print(
+                                    *objects[j][player.objects_states[j] + 5], sep='\n')
                 player.already_been[str(i[1])] = True
             case '#':
                 match i[1]:
