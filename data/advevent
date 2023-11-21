@@ -81,25 +81,7 @@ e  p+!pir=1 t+трезуб = a.!pir t.трез=137  t.сундук=137 t.!соо
 
 
 * === проверка: все сокровища уже собраны в доме ===
-
-e  l+3  a+золото        $-0 = a.!brought
-e  l+3  a+алмазы        $-0 = a.!brought
-e  l+3  a+серебро       $-0 = a.!brought
-e  l+3  a+драгоценности $-0 = a.!brought
-e  l+3  a+монеты        $-0 = a.!brought
-e  l+3  a+сундук        $-0 = a.!brought
-e  l+3  a+яйца          $-0 = a.!brought
-e  l+3  a+трезубец      $-0 = a.!brought
-e  l+3  a+ваза          $-0 = a.!brought
-e  l+3  a+изумруд       $-0 = a.!brought
-e  l+3  a+платина       $-0 = a.!brought
-e  l+3  a+жемчуг        $-0 = a.!brought
-e  l+3  a+ковер         $-0 = a.!brought
-e  l+3  a+пряности      $-0 = a.!brought
-e  l+3  a+цепь          $-0 = a.!brought
-e  l+3  a+RSX           $-0 = a.!brought
-e  l+3  a+бусы          $-0 = a.!brought  
-
+ 
 e  h+золото        $-0 = a.!seen
 e  h+алмазы        $-0 = a.!seen
 e  h+серебро       $-0 = a.!seen
@@ -118,9 +100,9 @@ e  h+цепь          $-0 = a.!seen
 e  h+RSX           $-0 = a.!seen
 e  h+бусы          $-0 = a.!seen  
 
-e  p+!brought=17  a-!light  %+20    = t.жезл=115  m.132  l.115
+e  p+!see=17  a-!light  %+20    = t.жезл=115  m.132  l.115
 
-e  p+!brought=16  a-!light  %+30    = p.решетка=0   p.!brought=17  "
+e  p+!see=16  a-!light  %+30    = p.решетка=0   p.!brought=17  "
    Загробный голос, многократно отраженный стенами пещеры, сказал:
    "Пещера скоро закрывается, все путешественники должны немедленно
    выйти через главную контору"
