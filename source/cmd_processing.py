@@ -33,8 +33,12 @@ def cnd_processing(obj: str, conditions: list, messages: dict, objects: dict, pl
                     player.location)] or buf in player.inventory
             case 'a':
                 ans = buf in player.objects_db[str(player.location)]
+            case 'i':
+                ans = buf in player.objects_db[str(i[3])]
             case 't':
                 ans = buf in player.inventory
+            case 'j':
+                ans = objects[buf][1]
             case '%':
                 ans = randint(0, 99) < i[2]
             case 'p':
@@ -111,6 +115,7 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                     _print(locations[str(i[1])][0])
                 else:
                     _print(*locations[str(i[1])][1], sep='\n')
+                    
                     if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
                         flag = True
                         for j in player.objects_db[str(player.location)]:
@@ -185,6 +190,8 @@ def act_processing(obj: str, actions: list, messages: dict, scores: dict, locati
                 player.objects_db[str(i[2])].append(buf)
             case 'a':
                 player.objects_states[str(buf)] += 1
+            case 'b':
+                player.objects_states[str(buf)] -= 1
             case 'i':
                 if '!lig' in player.objects_db[str(player.location)] or '!lig' in player.inventory:
                     flag = True

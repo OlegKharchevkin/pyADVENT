@@ -1,11 +1,12 @@
-import json
-import os
 import sys
+import os
+import json
 path = sys.argv[1]
 sys.path.insert(0, path)
 from adv_parser import *
 from db_gen import *
 from Player import *
+
 
 messages_file = "./data/advmessa"
 vocabulary_file = "./data/advvocab"
@@ -40,10 +41,7 @@ data = {"msgs": messages,
         "objctsdb": player.objects_db,
         "objctsstts": player.objects_states,
         "shrtans": player.short_ans,
-        "alrdbn": player.already_been}
+        "alrdbn": player.already_been,
+        "version": "advnt.1.6"}
 with open(save_file, "w", encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False)
-# os.system('pyinstaller make.spec')
-# os.system('wsl pyinstaller make.spec')
-# os.system('wsl rm -r ~/package; rm ~/package.deb ;cp ./dist/ADVENT ./package/usr/bin/; md5deep -r ./package/usr > ./package/DEBIAN/md5sums; cp -r ./package ~/package')
-# os.system('wsl dpkg-deb --build ~/package; cp ~/package.deb ./dist/ADVENT.deb')
