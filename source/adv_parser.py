@@ -49,7 +49,7 @@ def cmd_parser(in_str: str):
                 count += 1
                 buf = []
                 data[0].append([i])
-                if i in ('%', 'y', 'l', '>', '$', 'p'):
+                if i in ('%', 'y', 'l', '>', '$', 'p', 'i'):
                     mode = 1
                 elif i == "+":
                     mode = 2
@@ -256,7 +256,7 @@ def obj_parser(file: str, synonyms: dict[list]):
                 if i[3] != ">":
                     objects[buf[0]][0] = i[3:-1]
             elif i[0] == "f":
-                objects[buf[0]][2] = True
+                objects[buf[0]][2] = False
                 objects[buf[0]][3] = [int(j) for j in i[3:-1].split()]
             elif i[0] == "l":
                 objects[buf[0]][3] = [int(j) for j in i[3:-1].split()]

@@ -19,12 +19,16 @@
 from cmd_processing import *
 from Player import *
 import json
+from update import *
 
 
 class Engine():
     def __init__(self, save_file: str):
         with open(save_file, "r", encoding='utf-8') as f:
             data = json.load(f)
+        update(data)
+        with open(save_file, "w", encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False)
         self.messages = data["msgs"]
         self.trivial_answers = data["trvlanswrs"]
         self.synonyms = data["snnms"]
@@ -104,6 +108,7 @@ class Engine():
                 "objctsdb": self.player.objects_db,
                 "objctsstts": self.player.objects_states,
                 "shrtans": self.player.short_ans,
-                "alrdbn": self.player.already_been}
+                "alrdbn": self.player.already_been,
+                "version": "advnt.1.6"}
         with open(save_file, "w", encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False)
